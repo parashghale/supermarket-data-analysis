@@ -77,3 +77,11 @@ from customers c join
 orders o on c.customer_id=o.customer_id group by c.customer_id
 order by sum(o.total_amount) desc;
 
+-- "Which employee has processed the most orders?"
+select * from orders;
+select * from employees;
+select e.employee_id, e.first_name,e.last_name, e.department
+,count(o.employee_id) as totalProcessed
+from employees e join orders o on e.employee_id=o.employee_id
+group by o.employee_id
+order by totalProcessed desc;

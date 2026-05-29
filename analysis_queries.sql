@@ -64,3 +64,8 @@ select monthname(order_date)as month,count(*) as totalNo,sum(total_amount) as to
 from orders where status='completed'
 group by monthname(order_date);
 
+-- "Which department has the highest total salary cost?"
+select department, sum(salary) as totalSalary
+	,rank() over(order by sum(salary) desc)
+from employees group by department;
+

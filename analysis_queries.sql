@@ -69,3 +69,11 @@ select department, sum(salary) as totalSalary
 	,rank() over(order by sum(salary) desc)
 from employees group by department;
 
+-- "Who are our top 5 customers by total spending?"
+select * from customers;
+select c.customer_id,sum(o.total_amount) as totalamt, c.first_name,c.last_name
+	, c.email,c.loyalty_tier 
+from customers c join
+orders o on c.customer_id=o.customer_id group by c.customer_id
+order by sum(o.total_amount) desc;
+

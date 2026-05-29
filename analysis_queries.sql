@@ -55,3 +55,12 @@ SELECT category_name, total_value,
        END as label
 FROM cat_value
 ORDER BY total_value DESC;
+
+-- "Give a monthly sales report — total orders, total revenue and average order value for each month"
+
+select sum(total_amount) from orders where status ='completed';
+select monthname(order_date)as month,count(*) as totalNo,sum(total_amount) as totalAmt
+	,avg(total_amount) average
+from orders where status='completed'
+group by monthname(order_date);
+

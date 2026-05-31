@@ -74,17 +74,19 @@ select * from customers;
 select c.customer_id,sum(o.total_amount) as totalamt, c.first_name,c.last_name
 	, c.email,c.loyalty_tier 
 from customers c join
-orders o on c.customer_id=o.customer_id group by c.customer_id
-order by sum(o.total_amount) desc;
+orders o on c.customer_id=o.customer_id where o.status ='completed'
+group by c.customer_id
+order by sum(o.total_amount) desc limit 5;
 
--- "Which employee has processed the most orders?"
-select * from orders;
-select * from employees;
-select e.employee_id, e.first_name,e.last_name, e.department
-,count(o.employee_id) as totalProcessed
-from employees e join orders o on e.employee_id=o.employee_id
-group by o.employee_id
-order by totalProcessed desc;
+-- "Who are our top 5 customers by total spending?"
+select * from customers;
+select c.customer_id,sum(o.total_amount) as totalamt, c.first_name,c.last_name
+	, c.email,c.loyalty_tier
+    , rank() over (order by sum(o.total_amount) desc) as ranking
+from customers c join
+orders o on c.customer_id=o.customer_id where o.status ='completed'
+group by c.customer_id
+limit 5;
 
 -- "Show each customer, their total spending, and rank them within their loyalty tier"
 select c.customer_id,sum(o.total_amount) as totalAmt, c.first_name,c.last_name
@@ -93,4 +95,13 @@ from customers c join
 orders o on c.customer_id=o.customer_id 
 where status ='completed'
 group by c.customer_id;
+
+-- "Which employee has processed the most orders?"
+select * from orders;
+select * from employees;
+select e.employee_id, e.first_name,e.last_name, e.department
+,count(o.employee_id) as totalProcessed
+from employees e join orders o on e.employee_id=o.employee_id
+group by e.employee_id
+order by totalProcessed desc;
 

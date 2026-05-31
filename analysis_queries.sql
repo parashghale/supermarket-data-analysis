@@ -105,3 +105,11 @@ from employees e join orders o on e.employee_id=o.employee_id
 group by e.employee_id
 order by totalProcessed desc;
 
+-- "Show each customer, their total spending, and rank them within their loyalty tier"
+select  c.customer_id,sum(o.total_amount) as totalAmt, c.first_name,c.last_name
+	, c.email,c.loyalty_tier, RANK() OVER (PARTITION BY c.loyalty_tier 
+             ORDER BY SUM(o.total_amount) DESC) as Ranking
+from customers c join
+orders o on c.customer_id=o.customer_id 
+where o.status ='Completed' and c.loyalty_tier ='Platinum'
+group by c.customer_id;

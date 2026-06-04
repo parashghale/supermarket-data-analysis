@@ -113,3 +113,29 @@ from customers c join
 orders o on c.customer_id=o.customer_id 
 where o.status ='Completed' and c.loyalty_tier ='Platinum'
 group by c.customer_id;
+
+
+-- "Show employees who processed above average number of orders"
+select * from employees;
+select * from orders;
+with avge as (
+	select count(employee_id) as avgemp from orders
+    group by employee_id
+)
+select e.first_name, a.avgemp from employees e 
+join avge a on e.employee_id= a.employee_id
+group by e.first_name having e.first_name > a.avgemp;
+
+select count(*), avg(employee_id) as avgemp from orders
+    group by employee_id
+;
+with count_emp as (
+	select count(*) as ttl, employee_id from orders group by employee_id
+),
+avg_count as (
+	select avg(ttl) as avg_counts from count_emp
+)
+select e.first_name, c.ttl, a.avg_counts from employees e 
+join count_emp c on e.employee_id = c.employee_id, avg_count a
+ order by c.ttl desc
+;
